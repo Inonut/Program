@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="program:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/program_jar</output-path>
+    <root id="archive" name="program.jar">
+      <element id="module-output" name="program" />
+      <element id="extracted-dir" path="$USER_HOME$/.ivy2/cache/org.scalafx/scalafx_2.11/jars/scalafx_2.11-8.0.92-R10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-async_2.11/bundles/scala-async_2.11-0.9.6-RC2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.8.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
