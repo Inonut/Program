@@ -43,12 +43,12 @@ class PresentationController extends IController{
         println(iter + " " + totalError)
         errorValue.set(totalError.toString)
         epochValue.set(iter.toString)
-        /*if(iter % 100 == 0 ){
+        if(iter % 100 == 0 ){
           points.map(node => new Circle(node.asInstanceOf[javafx.scene.shape.Circle]))(collection.breakOut)
                 .filter(node => !sfxPoints.contains(node))
-                .foreach(point => point.fill = Color.valueOf(method.recognize(new ClassificationData{data = Array(point.centerX.value,point.centerY.value)}).name))
+                .foreach(point => point.fill = Color.valueOf(method.recognize(new ClassificationData{name = point.fill.value.toString; data = Array(point.centerX.value,point.centerY.value)}).name))
 
-        }*/
+        }
 
     }
     method.train(classificationData, epochs, error, learningRate, alfa, layers, function)

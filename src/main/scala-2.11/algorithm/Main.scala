@@ -26,5 +26,14 @@ object Main {
       1000, 0.01, ListBuffer(2,12), new Signoid)
 
     c.recognize(new ClassificationData{name = "2"; data = Array(6,4)})*/
+
+    val c = new BackPropagationMethod
+
+    c.train(ListBuffer(
+      new ClassificationData{name = "1"; data = Array(0, 1); target = 0},
+      new ClassificationData{name = "1"; data = Array(1, 0); target = 0},
+      new ClassificationData{name = "1"; data = Array(1, 1); target = 1},
+      new ClassificationData{name = "2"; data = Array(0, 0); target = 1}),
+      1000, 0.01, 0.25, 0.0001, ListBuffer(2,3), new Signoid)
   }
 }

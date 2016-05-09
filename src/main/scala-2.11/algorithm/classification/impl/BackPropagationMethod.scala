@@ -199,9 +199,12 @@ class BackPropagationMethod extends Classification{
           //total error
           //val targetNeuron = layers.last.neurons.find(neuron => neuron.name.equals(data.name)).get
           val targetNeuron = layers.last.neurons.last
-          totalError += targetNeuron.target - targetNeuron.output
+          totalError += Math.abs(targetNeuron.target - targetNeuron.output)
         }
       })
+
+      println(totalError)
+
 
       if(!stop){
         //println(totalError)
@@ -215,9 +218,10 @@ class BackPropagationMethod extends Classification{
 
     forwardPropagate(data)
 
-   // println(layers.last.neurons.maxBy(neuron => neuron.output).name)
+    println(layers.last.neurons.maxBy(neuron => neuron.output).output)
 
-    new ClassificationData {name = layers.last.neurons.maxBy(neuron => neuron.output).name}
+    //new ClassificationData {name = layers.last.neurons.maxBy(neuron => neuron.output).name}
+    data
   }
 
 

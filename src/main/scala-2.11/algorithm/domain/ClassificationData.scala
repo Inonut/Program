@@ -8,6 +8,6 @@ import scala.util.Random
 class ClassificationData {
 
   var name: String = null
-  val target: Double = new Random().nextDouble()
+  var target: Double = new Random().nextDouble()*3
   var data: Array[Double] = null
 }
