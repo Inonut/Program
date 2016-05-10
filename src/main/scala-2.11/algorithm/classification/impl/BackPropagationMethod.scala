@@ -19,9 +19,7 @@ class BackPropagationMethod extends Classification{
   var learningRate = 0.1
 
 
-  override def createNet(layerCount: ListBuffer[Int], nameOfData: ListBuffer[String]): Unit ={
-
-    val random = new Random
+  override def createNet(layerCount: ListBuffer[Int] ): Unit ={
 
     val sumNeurons = layerCount.sum
 
@@ -38,7 +36,8 @@ class BackPropagationMethod extends Classification{
       //init neuron pentru stratul curent
       neuronsLayer.foreach(neuron => {
         neuron.layer = layer
-        neuron.bias = random.nextDouble() / 10
+        neuron.bias = Math.random() * 2 - 1
+        neuron.biasOld = neuron.bias
       })
 
       //init startul curent
@@ -55,7 +54,7 @@ class BackPropagationMethod extends Classification{
         val weight = new Weight
         weight.neuronFrom = n1
         weight.neuronTo = n2
-        weight.w = random.nextDouble() / 10
+        weight.w = Math.random() * 2 - 1
         weight.wOld = weight.w
 
         layers(k).weights += weight
@@ -139,9 +138,9 @@ class BackPropagationMethod extends Classification{
     clearNet()
 
     //set ultimul strat
-    val names = classificationData.map(cd => cd.name).distinct
+    //val names = classificationData.map(cd => cd.name).distinct
     //createNet(layerCount += names.length, names)
-    createNet(layerCount += 1, names)
+    createNet(layerCount += classificationData.head.target.length)
     setActivationFunction(activationFunction)
 
 
@@ -186,7 +185,8 @@ class BackPropagationMethod extends Classification{
             }
           })*/
 
-          layers.last.neurons.last.target = data.target
+          //layers.last.neurons.last.target = data.target
+          (layers.last.neurons, data.target).zipped.foreach((neuron, target) => neuron.target = target)
 
           forwardPropagate(data)
 
@@ -198,12 +198,12 @@ class BackPropagationMethod extends Classification{
 
           //total error
           //val targetNeuron = layers.last.neurons.find(neuron => neuron.name.equals(data.name)).get
-          val targetNeuron = layers.last.neurons.last
-          totalError += Math.abs(targetNeuron.target - targetNeuron.output)
+          layers.last.neurons.foreach(neuron => totalError += Math.abs(neuron.target - neuron.output))
+
         }
       })
 
-      println(totalError)
+      println(iter + " "+ totalError)
 
 
       if(!stop){
@@ -218,10 +218,12 @@ class BackPropagationMethod extends Classification{
 
     forwardPropagate(data)
 
-    println(layers.last.neurons.maxBy(neuron => neuron.output).output)
+    //println(layers.last.neurons.maxBy(neuron => neuron.output).output)
+
+    //layers.last.neurons.foreach(neuron => println(neuron.output))
 
     //new ClassificationData {name = layers.last.neurons.maxBy(neuron => neuron.output).name}
-    data
+    new ClassificationData{target = layers.last.neurons.map(neuron => neuron.output)(collection.breakOut)}
   }
 
 

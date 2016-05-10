@@ -11,7 +11,6 @@ class Neuron {
   var output: Double = 0
   var target: Double = -1
   var error: Double = 0
-  var name: String = null
 
   var layer: Layer = null
 }

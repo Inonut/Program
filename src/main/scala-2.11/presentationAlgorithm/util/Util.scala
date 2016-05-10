@@ -32,4 +32,12 @@ object Util {
       elem2
     }
   }
+
+  def convertToSubUnit(x: Double): Double = {
+    var y = x
+    while(y >= 1){
+      y /= 10
+    }
+    y
+  }
 }

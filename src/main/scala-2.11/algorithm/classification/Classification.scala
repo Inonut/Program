@@ -13,7 +13,7 @@ trait Classification {
   private var callback: PartialFunction[Any,Unit] = null
   protected var stop = false
 
-  def createNet(layerCount: ListBuffer[Int], nameOfData: ListBuffer[String]): Unit
+  def createNet(layerCount: ListBuffer[Int]): Unit
 
   def clearNet(): Unit
 

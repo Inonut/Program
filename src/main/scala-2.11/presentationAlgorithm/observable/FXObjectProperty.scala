@@ -9,6 +9,8 @@ import presentationAlgorithm.util.Util
   */
 class FXObjectProperty[T] extends SimpleObjectProperty[T]{
   override def set(newValue: T): Unit = Util.fxThread { super.set(newValue)}
+
+  override def getValue: T = Util.fxThread { super.getValue}
 }
 
 

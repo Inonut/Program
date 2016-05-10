@@ -29,11 +29,19 @@ object Main {
 
     val c = new BackPropagationMethod
 
-    c.train(ListBuffer(
-      new ClassificationData{name = "1"; data = Array(0, 1); target = 0},
-      new ClassificationData{name = "1"; data = Array(1, 0); target = 0},
-      new ClassificationData{name = "1"; data = Array(1, 1); target = 1},
-      new ClassificationData{name = "2"; data = Array(0, 0); target = 1}),
-      1000, 0.01, 0.25, 0.0001, ListBuffer(2,3), new Signoid)
+    val input = ListBuffer(
+      new ClassificationData{name = "1"; data = Array(0.102, 0.167); target = Array(0.5)},
+      new ClassificationData{name = "1"; data = Array(0.382, 0.52); target = Array(0.5)},
+      new ClassificationData{name = "1"; data = Array(0.244, 0.224); target = Array(0.8)},
+      new ClassificationData{name = "1"; data = Array(0.149, 0.28); target = Array(0.8)})
+
+    c.train(input,
+      10000, 0.01, 0.25, 0.0001, ListBuffer(2,20), new Signoid)
+
+    input.foreach(data => {
+      c.recognize(data).target.foreach(t=>print(t+" "))
+      println()
+    })
+
   }
 }

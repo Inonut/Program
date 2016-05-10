@@ -8,8 +8,11 @@ import algorithm.classification.Classification
 import algorithm.domain.ClassificationData
 import algorithm.function.ActivationFunction
 import algorithm.function.impl.Signoid
+import algorithm2.domain.{Layer, Network, PropagationTrainer}
+import algorithm2.function.impl.SignoidFunction
 import presentationAlgorithm.mvc.IController
 import presentationAlgorithm.observable.{FXListProperty, FXObjectProperty}
+import presentationAlgorithm.util.Util
 
 import scala.collection.mutable.ListBuffer
 import scalafx.scene.paint.{Color, Paint}
@@ -26,10 +29,26 @@ class PresentationController extends IController{
 
   def clearPane(points: FXListProperty[Node]): Unit = points.clear()
 
+
+  def prepareTarget(classificationData: ListBuffer[ClassificationData]) = {
+    classificationData.groupBy(cdata => cdata.name).foreach(names => {
+      val target = Array(Math.random())
+      names._2.foreach(d => d.target = target)
+    })
+
+    classificationData.foreach(cdata=>cdata.data = cdata.data.map(d => Util.convertToSubUnit(d)))
+  }
+
+  def detNameFromOutput(data: ClassificationData, classificationData: ListBuffer[ClassificationData]): String = {
+    classificationData.minBy(cdata => (cdata.target,data.target).zipped.map((a,b) => Math.abs(a-b)).sum).name
+  }
+
   def startTrain(points: FXListProperty[Node], method: Classification, epochs: Int, error: Double, learningRate: Double, alfa: Double, layers: ListBuffer[Int], function: ActivationFunction, width: Int, height: Int, errorValue: FXObjectProperty[String], epochValue: FXObjectProperty[String]): Unit = {
 
     val sfxPoints: ListBuffer[Circle] = points.map(node => new Circle(node.asInstanceOf[javafx.scene.shape.Circle]))(collection.breakOut)
     val classificationData = sfxPoints.map(point=> new ClassificationData{name = point.fill.value.toString; data = Array(point.centerX.value, point.centerY.value)})
+
+    prepareTarget(classificationData)
 
     //init
     clearPane(points)
@@ -41,17 +60,27 @@ class PresentationController extends IController{
     method.afterIteration{
       case (iter: Int, totalError: Double) =>
         println(iter + " " + totalError)
-        errorValue.set(totalError.toString)
-        epochValue.set(iter.toString)
-        if(iter % 100 == 0 ){
+        //errorValue.set(totalError.toString)
+        //epochValue.set(iter.toString)
+        if(iter % 10 == 0 ){
           points.map(node => new Circle(node.asInstanceOf[javafx.scene.shape.Circle]))(collection.breakOut)
                 .filter(node => !sfxPoints.contains(node))
-                .foreach(point => point.fill = Color.valueOf(method.recognize(new ClassificationData{name = point.fill.value.toString; data = Array(point.centerX.value,point.centerY.value)}).name))
+                .foreach(point => {
+
+                  val data = method.recognize(new ClassificationData{
+                    name = point.fill.value.toString;
+                    data = Array(Util.convertToSubUnit(point.centerX.value), Util.convertToSubUnit(point.centerY.value))
+                  })
+                  val color = detNameFromOutput(data, classificationData)
+                  point.fill = Color.valueOf(color)
+                })
 
         }
 
     }
     method.train(classificationData, epochs, error, learningRate, alfa, layers, function)
+
+
   }
 
   def addPointTo(points: FXListProperty[Node], x: Double, y: Double, color: Paint): Unit = {
