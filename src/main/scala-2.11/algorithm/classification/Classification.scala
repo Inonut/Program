@@ -2,8 +2,9 @@ package algorithm.classification
 
 import algorithm.domain.ClassificationData
 import algorithm.function.ActivationFunction
+import algorithm.function.impl.SignoidFunction
+import presentationAlgorithm.util.Util
 
-import scala.collection.mutable.ListBuffer
 
 /**
   * Created by Dragos on 06.05.2016.
@@ -11,26 +12,21 @@ import scala.collection.mutable.ListBuffer
 trait Classification {
 
   private var callback: PartialFunction[Any,Unit] = null
+
   protected var stop = false
 
-  def createNet(layerCount: ListBuffer[Int]): Unit
+  var activationFunction = new SignoidFunction
+  var nrEpochs = 10000
+  var error = 0.01
+  var learningRate = 0.25
+  var alfa = 1E-4
+  var layerCount = Array(20)
 
-  def clearNet(): Unit
+  protected def createNet(layerCount: Array[Int]): Unit
 
-  def setActivationFunction(activationFunction: ActivationFunction): Unit
+  protected def clearNet(): Unit
 
-  protected def trainContinue(classificationData: ListBuffer[ClassificationData], nrEpochs: Int, error: Double, learningRate: Double, alfa: Double, layerCount: ListBuffer[Int], activationFunction: ActivationFunction ): Unit
-
-  def train(classificationData: ListBuffer[ClassificationData], nrEpochs: Int, error: Double, learningRate: Double, alfa: Double, layerCount: ListBuffer[Int], activationFunction: ActivationFunction ): Unit = {
-    stop = false
-    trainContinue(classificationData,nrEpochs,error,learningRate, alfa,layerCount,activationFunction)
-  }
-
-  def recognize(data: ClassificationData): ClassificationData
-
-  def afterIteration(callback: PartialFunction[Any,Unit]): Unit = this.callback = callback
-
-  def stopTrain(): Unit = this.stop = true
+  protected def trainContinue(classificationData: Array[ClassificationData]): Unit
 
   protected def doAfterIteration(params: Any): Unit = {
     if(this.callback != null){
@@ -38,4 +34,58 @@ trait Classification {
     }
   }
 
+
+  private def getInputSize(classificationData: Array[ClassificationData]): Int = {
+    val dataLengths = classificationData.map(cData=> cData.data.length)
+
+    val min = dataLengths.min
+    val max = dataLengths.max
+    if(min != max){
+      throw new Exception("Date incorecte")
+    }
+
+    min
+  }
+
+  private def getOutputSize(classificationData: Array[ClassificationData]): Int = {
+    val dataLengths = classificationData.map(cData=> cData.target.length)
+
+    val min = dataLengths.min
+    val max = dataLengths.max
+    if(min != max){
+      throw new Exception("Date incorecte")
+    }
+
+    min
+  }
+
+
+  def train(classificationData: Array[ClassificationData]): Unit = {
+    stop = false
+
+    layerCount = getInputSize(classificationData) +: layerCount :+ getOutputSize(classificationData)
+
+    trainContinue(classificationData)
+
+  }
+
+  def recognize(data: ClassificationData): ClassificationData
+
+  def stopTrain(): Unit = this.stop = true
+
+  def afterIteration(callback: PartialFunction[Any,Unit]): Unit = this.callback = callback
+
+}
+
+object Classification {
+  def prepareData(classificationData: Array[ClassificationData]): Unit = {
+
+    classificationData.groupBy(cdata => cdata.name).foreach(names => {
+      val target = Array(Math.random())
+      names._2.foreach(d => d.target = target)
+    })
+
+    classificationData.foreach(cdata=>cdata.data = cdata.data.map(d => d/1000))
+
+  }
 }

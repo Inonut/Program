@@ -9,4 +9,8 @@ class Weight {
   var neuronTo: Neuron = null
   var w: Double = 0
   var wOld: Double = 0
+
+  var gradient: Double = 0
+  var lastGradient: Double = 0
+  var updateValue: Double = 0.1
 }

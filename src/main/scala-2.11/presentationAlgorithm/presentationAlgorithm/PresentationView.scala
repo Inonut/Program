@@ -4,7 +4,7 @@ import javafx.scene.layout.Border
 
 import algorithm.classification.Classification
 import algorithm.classification.impl.{BackPropagationMethod, PerceptronMethod}
-import algorithm.function.impl.Signoid
+import algorithm.function.impl.SignoidFunction
 import presentationAlgorithm.mvc.IView
 import presentationAlgorithm.observable.FXListProperty
 import presentationAlgorithm.util.Util
@@ -33,12 +33,19 @@ class PresentationView extends Scene with IView{
     style = "" +
       "-fx-border-color: #2e8b57;" +
       "-fx-border-width: 2px;"
-    model.width <== maxWidth
-    model.height <== maxHeight
-    model.width <== minWidth
-    model.height <== minHeight
+
+    //bind
+    model.width <==> maxWidth
+    model.height <==> maxHeight
+    model.width <==> minWidth
+    model.height <==> minHeight
     model.points set children
-    onMouseClicked = (event: MouseEvent) =>async {controller.addPointTo(model.points, event.x, event.y, model.colorSelected.getValue) } onFailure Util.defaultError
+
+
+    //add action
+    onMouseClicked = (event: MouseEvent) =>async {
+      controller.addPointTo(model.points, event.x, event.y, model.colorSelected.getValue)
+    } onFailure Util.defaultError
 
     //init:
     maxWidth = 500
@@ -48,8 +55,9 @@ class PresentationView extends Scene with IView{
   }
 
   private val startButton = new Button{
-    text = "Start"
-    onAction = (e: ActionEvent) => async { controller.startTrain(
+
+    //addAction
+    onAction = (e: ActionEvent) => async { /*controller.startTrain(
       model.points,
       model.selectedMethod.getValue,
       1000000,
@@ -61,32 +69,50 @@ class PresentationView extends Scene with IView{
       model.width.value,
       model.height.value,
       model.errorValue,
-      model.epochValue)
+      model.epochValue)*/
+
+      controller.startTrain(model)
     } onFailure Util.defaultError
+
+
+    //init
+    text = "Start"
   }
 
   private val stopButton = new Button{
     text = "Stop"
-    onAction = (e: ActionEvent) => async { controller.stopTrain(model.selectedMethod.getValue)} onFailure Util.defaultError
+    onAction = (e: ActionEvent) => async {
+      controller.stopTrain(model)
+    } onFailure Util.defaultError
   }
 
   private val clearButton = new Button{
     text = "Clear"
     onAction = (e: ActionEvent) => async {
-      controller.stopTrain(model.selectedMethod.getValue)
-      controller.clearPane(model.points)
+      /*controller.stopTrain(model.selectedMethod.getValue)
+      controller.clearPane(model.points)*/
+      controller.clearPane(model)
+    } onFailure Util.defaultError
+  }
+
+  private val clearAllButton = new Button{
+    text = "ClearAll"
+    onAction = (e: ActionEvent) => async {
+      /*controller.stopTrain(model.selectedMethod.getValue)
+      controller.clearPane(model.points)*/
+      controller.clearAllPane(model)
     } onFailure Util.defaultError
   }
 
   private val colorPiker = new ColorPicker{
-    model.colorSelected <== value
+    model.colorSelected <==> value
 
     //init:
     value = Color.Red
   }
 
   private val choiceBox = new ChoiceBox[Classification]{
-    model.selectedMethod <== selectionModel.value.selectedItemProperty()
+    value <==> model.selectedMethod
 
     //init:
     items = new FXListProperty[Classification]{this.addAll(new BackPropagationMethod/*, new PerceptronMethod*/)}
@@ -94,32 +120,32 @@ class PresentationView extends Scene with IView{
   }
 
   private val hiddenLayer = new TextField{
-    model.hiddenLayerValue <== text
+    model.hiddenLayerValue <==> text
 
     //init:
     text = "20"
   }
 
   private val learnRate = new TextField{
-    model.learnRateValue <== text
+    model.learnRateValue <==> text
 
     //init:
     text = "0.25"
   }
 
   private val alfa = new TextField{
-    model.alfaValue <== text
+    model.alfaValue <==> text
 
     //init:
     text = "0.0001"
   }
 
   private val epochValue = new TextField{
-    text <== model.epochValue
+    text <==> model.epochValue
   }
 
   private val errorValue = new TextField{
-    text <== model.errorValue
+    text <==> model.errorValue
   }
 
   root = new VBox{
@@ -130,6 +156,7 @@ class PresentationView extends Scene with IView{
           startButton,
           stopButton,
           clearButton,
+          clearAllButton,
           colorPiker,
           choiceBox
         )

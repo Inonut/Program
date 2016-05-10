@@ -8,4 +8,6 @@ import presentationAlgorithm.util.Util
   */
 class FXStringProperty extends SimpleStringProperty{
   override def set(newValue: String): Unit = Util.fxThread{ super.set(newValue)}
+
+  override def get(): String = Util.fxThread{ super.get() }
 }

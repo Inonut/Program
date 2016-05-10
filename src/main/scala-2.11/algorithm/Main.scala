@@ -1,10 +1,8 @@
 package algorithm
 
-import classification.impl.BackPropagationMethod
-import domain.ClassificationData
-import function.impl.Signoid
+import algorithm.classification.impl.BackPropagationMethod
+import algorithm.domain.ClassificationData
 
-import scala.collection.mutable.ListBuffer
 
 /**
   * Created by Dragos on 07.05.2016.
@@ -27,21 +25,47 @@ object Main {
 
     c.recognize(new ClassificationData{name = "2"; data = Array(6,4)})*/
 
-    val c = new BackPropagationMethod
+    var c = new BackPropagationMethod
 
-    val input = ListBuffer(
-      new ClassificationData{name = "1"; data = Array(0.102, 0.167); target = Array(0.5)},
-      new ClassificationData{name = "1"; data = Array(0.382, 0.52); target = Array(0.5)},
-      new ClassificationData{name = "1"; data = Array(0.244, 0.224); target = Array(0.8)},
-      new ClassificationData{name = "1"; data = Array(0.149, 0.28); target = Array(0.8)})
+   /* var input = Array(
+      new ClassificationData{name = "1"; data = Array(0.075, 0.234); target = Array(0.702)},
+      new ClassificationData{name = "1"; data = Array(0.076, 0.180); target = Array(0.702)},
+      new ClassificationData{name = "1"; data = Array(0.081, 0.105); target = Array(0.702)},
+      new ClassificationData{name = "1"; data = Array(0.073, 0.056); target = Array(0.702)},
+      new ClassificationData{name = "1"; data = Array(0.226, 0.218); target = Array(0.379)},
+      new ClassificationData{name = "1"; data = Array(0.204, 0.114); target = Array(0.379)},
+      new ClassificationData{name = "1"; data = Array(0.200, 0.050); target = Array(0.379)},
+      new ClassificationData{name = "1"; data = Array(0.390, 0.189); target = Array(0.603)},
+      new ClassificationData{name = "1"; data = Array(0.393, 0.133); target = Array(0.603)},
+      new ClassificationData{name = "1"; data = Array(0.393, 0.020); target = Array(0.603)})
+*/
 
-    c.train(input,
-      10000, 0.01, 0.25, 0.0001, ListBuffer(2,20), new Signoid)
+    var input = Array(
+      new ClassificationData{name = "1"; data = Array(105, 217); target = Array(1,0,0)},
+      new ClassificationData{name = "1"; data = Array(410, 64); target = Array(1,0,0)},
+      new ClassificationData{name = "1"; data = Array(83, 61); target = Array(0.701,0.901,0.701)},
+      new ClassificationData{name = "1"; data = Array(413, 246); target = Array(0.701,0.901,0.701)})
+
+  /*  val input = Array(
+      new ClassificationData{name = "1"; data = Array(0, 1); target = Array(0)},
+      new ClassificationData{name = "1"; data = Array(1, 0); target = Array(0)},
+      new ClassificationData{name = "1"; data = Array(1, 1); target = Array(1)},
+      new ClassificationData{name = "1"; data = Array(0, 0); target = Array(1)})
+*/
+    c.layerCount = Array(30)
+    c.alfa = 1E-6
+    c.learningRate = 0.8
+    c.train(input)
+
+    input :+= new ClassificationData{name = "1"; data = Array(0.413, 0.248); target = Array(0.603)}
+    input :+= new ClassificationData{name = "1"; data = Array(0.413, 0.249); target = Array(0.603)}
 
     input.foreach(data => {
       c.recognize(data).target.foreach(t=>print(t+" "))
       println()
     })
+
+
 
   }
 }

@@ -1,6 +1,7 @@
 package presentationAlgorithm.presentationAlgorithm
 
 import javafx.scene.Node
+import javafx.scene.control.SingleSelectionModel
 import javafx.scene.paint.Color
 
 import algorithm.classification.Classification

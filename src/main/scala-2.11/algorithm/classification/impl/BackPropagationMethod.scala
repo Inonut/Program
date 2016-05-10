@@ -4,34 +4,27 @@ import algorithm.classification.Classification
 import algorithm.domain.{ClassificationData, Layer, Neuron, Weight}
 import algorithm.function.ActivationFunction
 
-import scala.collection.mutable.ListBuffer
-import scala.util.Random
-
 /**
   * Created by Dragos on 06.05.2016.
   */
 class BackPropagationMethod extends Classification{
 
-  var neurons = new ListBuffer[Neuron]
-  var layers = new ListBuffer[Layer]
-  var activationFunction: ActivationFunction = null
-  var alfa = 0.0001
-  var learningRate = 0.1
+  var neurons = Array[Neuron]()
+  var layers = Array[Layer]()
 
-
-  override def createNet(layerCount: ListBuffer[Int] ): Unit ={
+  protected override def createNet(layerCount: Array[Int] ): Unit ={
 
     val sumNeurons = layerCount.sum
 
     // creare neuroni
-    (1 to sumNeurons).foreach(i => this.neurons += new Neuron)
+    (1 to sumNeurons).foreach(i => this.neurons :+= new Neuron)
 
     // creare strat neuronal
     var sum = 0
     layerCount.foreach(nrNeuron => {
       val layer = new Layer
       //primii nrNeuroni Neuroni
-      val neuronsLayer: ListBuffer[Neuron] = (for(i <- sum until sum + nrNeuron) yield neurons(i))(collection.breakOut)
+      val neuronsLayer: Array[Neuron] = (for(i <- sum until sum + nrNeuron) yield neurons(i))(collection.breakOut)
 
       //init neuron pentru stratul curent
       neuronsLayer.foreach(neuron => {
@@ -43,7 +36,7 @@ class BackPropagationMethod extends Classification{
       //init startul curent
       layer.neurons = neuronsLayer
 
-      layers += layer
+      layers :+= layer
 
       sum = sum + nrNeuron
     })
@@ -57,8 +50,8 @@ class BackPropagationMethod extends Classification{
         weight.w = Math.random() * 2 - 1
         weight.wOld = weight.w
 
-        layers(k).weights += weight
-        layers(k+1).weights += weight
+        layers(k).weights :+= weight
+        layers(k+1).weights :+= weight
       }
     }
 
@@ -68,12 +61,11 @@ class BackPropagationMethod extends Classification{
 
   }
 
-  override def clearNet(): Unit = {
-    neurons.clear()
-    layers.clear()
+  protected override def clearNet(): Unit = {
+    neurons = Array()
+    layers = Array()
   }
 
-  override def setActivationFunction(activationFunction: ActivationFunction): Unit = this.activationFunction = activationFunction
 
   def forwardPropagate(data: ClassificationData): Unit = {
 
@@ -107,6 +99,32 @@ class BackPropagationMethod extends Classification{
       val layer = layers(i) // prin referinta (vezi initul)
       val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronTo))
       weights.foreach(weight => {
+
+       /* weight.gradient = weight.neuronTo.error * weight.neuronFrom.output
+
+        var change = Math.signum(weight.gradient * weight.lastGradient)
+        var weightChange = 0.0
+
+        change match {
+          case 1 =>
+            var delta = weight.updateValue * 1.2
+            weightChange = Math.signum(weight.gradient) * delta
+            weight.updateValue = delta
+            weight.lastGradient = weight.gradient
+          case -1 =>
+            var delta = weight.updateValue * 0.5
+            weightChange = 0
+            weight.updateValue = delta
+            weight.lastGradient = 0
+          case 0 =>
+            var delta = weight.updateValue
+            weightChange = Math.signum(weight.gradient) * delta
+            weight.lastGradient = weight.gradient
+        }
+
+        weight.w += weightChange*/
+
+
         val oldWeight = weight.w
         
         weight.w = weight.w + alfa * weight.wOld + learningRate * weight.neuronTo.error * weight.neuronFrom.output
@@ -130,18 +148,14 @@ class BackPropagationMethod extends Classification{
   }
 
 
-  protected override def trainContinue(classificationData: ListBuffer[ClassificationData], nrEpochs: Int, error: Double, learningRate: Double, alfa: Double, layerCount: ListBuffer[Int], activationFunction: ActivationFunction): Unit = {
-
-    this.learningRate = learningRate
-    this.alfa = alfa
+  protected override def trainContinue(classificationData: Array[ClassificationData]): Unit = {
 
     clearNet()
 
     //set ultimul strat
     //val names = classificationData.map(cd => cd.name).distinct
     //createNet(layerCount += names.length, names)
-    createNet(layerCount += classificationData.head.target.length)
-    setActivationFunction(activationFunction)
+    createNet(layerCount)
 
 
     /********/

@@ -12,4 +12,6 @@ class FXIntegerProperty(initialValue: Int) extends SimpleIntegerProperty(initial
   def this() = this(0)
 
   override def set(newValue: Int): Unit = Util.fxThread{ super.set(newValue)}
+
+  override def get(): Int = Util.fxThread{ super.get()}
 }

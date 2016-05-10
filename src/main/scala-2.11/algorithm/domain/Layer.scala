@@ -7,6 +7,6 @@ import scala.collection.mutable.ListBuffer
   */
 class Layer {
 
-  var neurons = new ListBuffer[Neuron]
-  var weights = new ListBuffer[Weight]
+  var neurons = Array[Neuron]()
+  var weights = Array[Weight]()
 }
