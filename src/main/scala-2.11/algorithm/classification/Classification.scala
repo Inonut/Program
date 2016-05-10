@@ -16,8 +16,8 @@ trait Classification {
   protected var stop = false
 
   var activationFunction = new SignoidFunction
-  var nrEpochs = 10000
-  var error = 0.01
+  var nrEpochs = 100000
+  var error = 0.001
   var learningRate = 0.25
   var alfa = 1E-4
   var layerCount = Array(20)

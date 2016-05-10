@@ -12,6 +12,11 @@ class BackPropagationMethod extends Classification{
   var neurons = Array[Neuron]()
   var layers = Array[Layer]()
 
+  val etaPlus = 1.2
+  val etaMinus = 0.5
+  val deltaMax = 50.0
+  val deltaMin = 1.0E-6
+
   protected override def createNet(layerCount: Array[Int] ): Unit ={
 
     val sumNeurons = layerCount.sum
@@ -89,64 +94,136 @@ class BackPropagationMethod extends Classification{
     for(i <- layers.length-2 until 0 by -1){
       val layer = layers(i) // prin referinta (vezi initul)
       val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronFrom))
-      weights.foreach(weight => weight.neuronFrom.error = activationFunction.derivate(weight.neuronFrom.weightSum) * weight.neuronTo.error * weight.w)
+      layer.neurons.foreach(neuron => neuron.error = 0)
+      weights.foreach(weight => weight.neuronFrom.error += activationFunction.derivate(weight.neuronFrom.weightSum) * weight.neuronTo.error * weight.w)
     }
   }
+
 
   def updateWeights(): Unit = {
 
     for(i <- 1 until layers.length){
       val layer = layers(i) // prin referinta (vezi initul)
       val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronTo))
+
       weights.foreach(weight => {
-
-       /* weight.gradient = weight.neuronTo.error * weight.neuronFrom.output
-
-        var change = Math.signum(weight.gradient * weight.lastGradient)
-        var weightChange = 0.0
-
-        change match {
-          case 1 =>
-            var delta = weight.updateValue * 1.2
-            weightChange = Math.signum(weight.gradient) * delta
-            weight.updateValue = delta
-            weight.lastGradient = weight.gradient
-          case -1 =>
-            var delta = weight.updateValue * 0.5
-            weightChange = 0
-            weight.updateValue = delta
-            weight.lastGradient = 0
-          case 0 =>
-            var delta = weight.updateValue
-            weightChange = Math.signum(weight.gradient) * delta
-            weight.lastGradient = weight.gradient
-        }
-
-        weight.w += weightChange*/
-
 
         val oldWeight = weight.w
         
-        weight.w = weight.w + alfa * weight.wOld + learningRate * weight.neuronTo.error * weight.neuronFrom.output
+        weight.w += alfa * weight.wOld + learningRate * weight.neuronTo.error * weight.neuronFrom.output
 
         weight.wOld = oldWeight
       })
     }
   }
 
-  def updateBias(): Unit = {
+  def updateBiases(): Unit = {
     for(i <- 1 until layers.length){
       val layer = layers(i) // prin referinta (vezi initul)
       layer.neurons.foreach(neuron => {
         val oldBias = neuron.bias
 
-        neuron.bias = neuron.bias + alfa * neuron.biasOld + learningRate * neuron.error * 1
+        neuron.bias += alfa * neuron.biasOld + learningRate * neuron.error * 1
 
         neuron.biasOld = neuron.bias
       })
     }
   }
 
+  def updateGradientNeurons(): Unit = {
+    for(i <- 1 until layers.length){
+      val layer = layers(i) // prin referinta (vezi initul)
+      val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronTo))
+
+      weights.foreach(weight => {
+        weight.neuronTo.gradientNeuron += weight.neuronTo.error * weight.neuronFrom.output
+      })
+    }
+  }
+
+  def updateGradientBiases(): Unit = {
+    for(i <- 1 until layers.length){
+      val layer = layers(i) // prin referinta (vezi initul)
+      layer.neurons.foreach(neuron => {
+        neuron.gradientBias = neuron.error * 1.0
+      })
+    }
+  }
+
+  def updateWeights2(): Unit ={
+    for(i <- 1 until layers.length){
+      val layer = layers(i) // prin referinta (vezi initul)
+      val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronTo))
+
+      weights.foreach(weight => {
+
+        var change = weight.neuronTo.gradientNeuron *  weight.neuronTo.prevGradientNeuron
+        var delta = 0.0
+
+        if(change > 0){
+          delta = weight.wOld * etaPlus
+          if(delta > deltaMax){
+            delta = deltaMax
+          }
+          weight.w += -Math.signum(weight.neuronTo.gradientNeuron) * delta
+
+        } else if(change < 0){
+          delta = weight.wOld * etaMinus
+          if(delta < deltaMin){
+            delta = deltaMin
+          }
+          weight.w -= weight.wOld
+          weight.neuronTo.gradientNeuron = 0
+
+        } else {
+          delta = weight.wOld
+          weight.w += -Math.signum(weight.neuronTo.gradientNeuron) * delta
+        }
+
+        weight.wOld = delta
+        weight.neuronTo.prevGradientNeuron =  weight.neuronTo.gradientNeuron
+
+      })
+    }
+  }
+
+  def updateBiases2(): Unit ={
+    for(i <- 1 until layers.length){
+      val layer = layers(i) // prin referinta (vezi initul)
+      layer.neurons.foreach(neuron => {
+
+        var change = neuron.prevGradientBias *  neuron.gradientBias
+        var delta = 0.0
+
+        if(change > 0){
+          delta = neuron.biasOld * etaPlus
+          if(delta > deltaMax){
+            delta = deltaMax
+          }
+          neuron.bias += -Math.signum(neuron.gradientBias) * delta
+
+        } else if(change < 0){
+          delta = neuron.biasOld * etaMinus
+          if(delta < deltaMin){
+            delta = deltaMin
+          }
+          neuron.bias -= neuron.biasOld
+          neuron.gradientBias = 0
+
+        } else {
+          delta = neuron.biasOld
+          if(delta > deltaMax){
+            delta = deltaMax
+          }
+          neuron.bias += -Math.signum(neuron.gradientBias) * delta
+        }
+
+        neuron.biasOld = delta
+        neuron.prevGradientBias =  neuron.gradientBias
+
+      })
+    }
+  }
 
   protected override def trainContinue(classificationData: Array[ClassificationData]): Unit = {
 
@@ -206,9 +283,15 @@ class BackPropagationMethod extends Classification{
 
           updateError()
 
+          //updateGradientNeurons()
+
+          //updateGradientBiases()
+
+          updateBiases()
+
           updateWeights()
 
-          updateBias()
+
 
           //total error
           //val targetNeuron = layers.last.neurons.find(neuron => neuron.name.equals(data.name)).get

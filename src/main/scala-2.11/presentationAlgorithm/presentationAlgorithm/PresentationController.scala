@@ -47,12 +47,10 @@ class PresentationController extends IController{
 
     sfxPoints = model.points.map(node => new Circle(node.asInstanceOf[javafx.scene.shape.Circle]))(collection.breakOut)
     val classificationData: Array[ClassificationData] = sfxPoints.map(point=> {
-      var color = Color.valueOf(point.fill.value.toString)
       new ClassificationData{
             name = point.fill.value.toString
-            data = Array(point.centerX.value / 1000, point.centerY.value / 1000)
-            target = Array(color.red, color.green, color.blue)
-          }
+            data = Array(point.centerX.value, point.centerY.value)
+      }
     })
 
     /****init***/
@@ -66,7 +64,7 @@ class PresentationController extends IController{
 
 
 
-    //Classification.prepareData(classificationData)
+    Classification.prepareData(classificationData)
 
     /*****/
     val method = model.selectedMethod.get
@@ -83,16 +81,10 @@ class PresentationController extends IController{
                 val data = method.recognize(new ClassificationData{
                   data = Array(point.centerX.value / 1000, point.centerY.value / 1000)
                 })
-                PlatformImpl.runLater(new Runnable {
-                  override def run(): Unit = point.fill = new javafx.scene.paint.Color(data.target(0),data.target(1),data.target(2), 1)
-                })
-
-
-                /*
                 val color = detNameFromOutput(data, classificationData)
                 PlatformImpl.runLater(new Runnable {
                   override def run(): Unit = point.fill = Color.valueOf(color)
-                })*/
+                })
               })
         }
     }
