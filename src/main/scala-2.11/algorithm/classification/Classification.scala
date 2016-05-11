@@ -85,7 +85,7 @@ object Classification {
       names._2.foreach(d => d.target = target)
     })
 
-    classificationData.foreach(cdata=>cdata.data = cdata.data.map(d => d/1000))
+    classificationData.foreach(cdata=>cdata.data = cdata.data.map(d => d))
 
   }
 }
