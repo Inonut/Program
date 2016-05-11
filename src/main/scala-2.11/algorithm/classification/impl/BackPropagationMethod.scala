@@ -89,7 +89,7 @@ class BackPropagationMethod extends Classification{
 
   def updateError(): Unit = {
     //ultimul strat
-    layers.last.neurons.foreach(neuron => neuron.error = activationFunction.derivate(neuron.weightSum) * (neuron.target - neuron.output))
+    layers.last.neurons.foreach(neuron => neuron.error = activationFunction.derivate(neuron.output) * (neuron.target - neuron.output))
 
     for(i <- layers.length-2 until 0 by -1){
       val layer = layers(i) // prin referinta (vezi initul)
@@ -295,7 +295,7 @@ class BackPropagationMethod extends Classification{
 
           //total error
           //val targetNeuron = layers.last.neurons.find(neuron => neuron.name.equals(data.name)).get
-          layers.last.neurons.foreach(neuron => totalError += Math.abs(neuron.target - neuron.output))
+          layers.last.neurons.foreach(neuron => totalError += Math.pow(neuron.target - neuron.output, 2))
 
         }
       })

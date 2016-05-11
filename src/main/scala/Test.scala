@@ -4,20 +4,19 @@
 object Test {
 
   def main(args: Array[String]) {
-    var list = List(1,2,3)
+    var list = Array(1,2,3)
 
-    list = 0 +: list :+ 5
+    asd(list)
 
-    //list = Nil
+    list :+= 5
 
-    //list.foreach(e => println(e))
+    list.foreach(println(_))
 
 
-    var l = Array(1,2,3)
+  }
 
-    l = l :+ 4
+  def asd(list: Array[Int]): Unit ={
 
-    l.foreach(e => println(e))
-
+    //list = list.map(_+2)
   }
 }

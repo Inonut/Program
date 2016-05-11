@@ -41,10 +41,10 @@ object Main {
 */
 
     var input = Array(
-      new ClassificationData{name = "1"; data = Array(105, 217); target = Array(1,0,0)},
-      new ClassificationData{name = "1"; data = Array(410, 64); target = Array(1,0,0)},
-      new ClassificationData{name = "1"; data = Array(83, 61); target = Array(0.701,0.901,0.701)},
-      new ClassificationData{name = "1"; data = Array(413, 246); target = Array(0.701,0.901,0.701)})
+      new ClassificationData{name = "1"; data = Array(0.065, 0.154); target = /*Array(0.363)*/ Array(1,0,0)},
+      new ClassificationData{name = "1"; data = Array(0.221, 0.148); target = /*Array(0.207)*/ Array(1,1,0)},
+      new ClassificationData{name = "1"; data = Array(0.333, 0.141); target = /*Array(0.730)*/ Array(1,0,1)},
+      new ClassificationData{name = "1"; data = Array(0.463, 0.145); target = /*Array(0.342)*/ Array(0,1,0)})
 
   /*  val input = Array(
       new ClassificationData{name = "1"; data = Array(0, 1); target = Array(0)},
@@ -57,8 +57,8 @@ object Main {
     c.learningRate = 0.8
     c.train(input)
 
-    input :+= new ClassificationData{name = "1"; data = Array(0.413, 0.248); target = Array(0.603)}
-    input :+= new ClassificationData{name = "1"; data = Array(0.413, 0.249); target = Array(0.603)}
+    input :+= new ClassificationData{data = Array(0.383, 0.400);}
+    input :+= new ClassificationData{data = Array(0.463, 0.185);}
 
     input.foreach(data => {
       c.recognize(data).target.foreach(t=>print(t+" "))

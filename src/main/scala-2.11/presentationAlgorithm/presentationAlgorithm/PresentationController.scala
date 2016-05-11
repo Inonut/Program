@@ -66,14 +66,16 @@ class PresentationController extends IController{
 
     Classification.prepareData(classificationData)
 
+    classificationData.foreach(elem=> println(elem.toString))
+
     /*****/
     val method = model.selectedMethod.get
     method.afterIteration{
       case (iter: Int, totalError: Double) =>
-        println(iter + " " + totalError)
+        //println(iter + " " + totalError)
         model.errorValue.set(totalError.toString)
         model.epochValue.set(iter.toString)
-        if(iter % 10 == 0 ){
+        if(iter % 5000 == 0 ){
           model.points.map(node => new Circle(node.asInstanceOf[javafx.scene.shape.Circle]))(collection.breakOut)
               .filter(node => !sfxPoints.contains(node))
               .foreach(point => {

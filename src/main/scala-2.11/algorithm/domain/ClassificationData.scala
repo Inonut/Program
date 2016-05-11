@@ -10,4 +10,7 @@ class ClassificationData {
   var name: String = null
   var target: Array[Double] = null
   var data: Array[Double] = null
+
+
+  override def toString = s"ClassificationData(target = ${target.mkString(", ")}, data = ${data.mkString(", ")})"
 }
