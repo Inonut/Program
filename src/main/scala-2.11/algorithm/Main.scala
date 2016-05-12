@@ -52,6 +52,9 @@ object Main {
       new ClassificationData{name = "1"; data = Array(1, 1); target = Array(1)},
       new ClassificationData{name = "1"; data = Array(0, 0); target = Array(1)})
 */
+
+
+
     c.layerCount = Array(30)
     c.alfa = 1E-6
     c.learningRate = 0.8

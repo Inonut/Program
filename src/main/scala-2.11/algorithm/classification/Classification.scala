@@ -17,7 +17,7 @@ trait Classification {
 
   var activationFunction = new SignoidFunction
   var nrEpochs = 10000000
-  var error = 0.001
+  var error = 1E-5
   var learningRate = 0.25
   var alfa = 1E-4
   var layerCount = Array(20)
@@ -81,11 +81,11 @@ object Classification {
   def prepareData(classificationData: Array[ClassificationData]): Unit = {
 
     classificationData.groupBy(cdata => cdata.name).foreach(names => {
-      val target = Array(Math.random(),Math.random(),Math.random(),Math.random())
+      val target = Array(Math.random())
       names._2.foreach(d => d.target = target)
     })
 
-    classificationData.foreach(cdata=>cdata.data = cdata.data.map(d => d))
+    classificationData.foreach(cdata=>cdata.data = cdata.data.map(d => d/1000))
 
   }
 }
