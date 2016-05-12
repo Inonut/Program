@@ -81,17 +81,21 @@ object Classification {
   def prepareData(classificationData: Array[ClassificationData]): Unit = {
 
     classificationData.groupBy(cdata => cdata.name).foreach(names => {
-      val target = Array(
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        Math.random())
+      val target = Array[Double](
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random()),
+        Math.round(Math.random())
+      )
       names._2.foreach(d => d.target = target)
     })
 

@@ -12,6 +12,7 @@ object Test {
 
     list.foreach(println(_))
 
+    println(Math.round(0.45))
 
   }
 

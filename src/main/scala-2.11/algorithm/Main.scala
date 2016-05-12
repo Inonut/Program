@@ -1,5 +1,6 @@
 package algorithm
 
+import algorithm.classification.Classification
 import algorithm.classification.impl.BackPropagationMethod
 import algorithm.domain.ClassificationData
 
@@ -41,10 +42,10 @@ object Main {
 */
 
     var input = Array(
-      new ClassificationData{name = "1"; data = Array(0.065, 0.154); target = /*Array(0.363)*/ Array(1,0,0)},
-      new ClassificationData{name = "1"; data = Array(0.221, 0.148); target = /*Array(0.207)*/ Array(1,1,0)},
-      new ClassificationData{name = "1"; data = Array(0.333, 0.141); target = /*Array(0.730)*/ Array(1,0,1)},
-      new ClassificationData{name = "1"; data = Array(0.463, 0.145); target = /*Array(0.342)*/ Array(0,1,0)})
+      new ClassificationData{name = "1"; data = Array(65, 154); },
+      new ClassificationData{name = "2"; data = Array(221, 148); },
+      new ClassificationData{name = "3"; data = Array(333, 141); },
+      new ClassificationData{name = "4"; data = Array(463, 145); })
 
   /*  val input = Array(
       new ClassificationData{name = "1"; data = Array(0, 1); target = Array(0)},
@@ -52,12 +53,13 @@ object Main {
       new ClassificationData{name = "1"; data = Array(1, 1); target = Array(1)},
       new ClassificationData{name = "1"; data = Array(0, 0); target = Array(1)})
 */
-
+    Classification.prepareData(input)
 
 
     c.layerCount = Array(30)
     c.alfa = 1E-6
     c.learningRate = 0.8
+    c.error = 1E-3
     c.train(input)
 
     input :+= new ClassificationData{data = Array(0.383, 0.400);}

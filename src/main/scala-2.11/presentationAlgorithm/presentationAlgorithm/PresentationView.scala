@@ -123,14 +123,14 @@ class PresentationView extends Scene with IView{
     model.hiddenLayerValue <==> text
 
     //init:
-    text = "30"
+    text = "30"//20
   }
 
   private val learnRate = new TextField{
     model.learnRateValue <==> text
 
     //init:
-    text = "0.8"
+    text = "0.8"//0.25
   }
 
   private val alfa = new TextField{
