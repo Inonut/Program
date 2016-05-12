@@ -20,8 +20,12 @@ import scala.collection.JavaConversions._
   * Created by Dragos on 11.05.2016.
   */
 class AppController extends IController{
+  def onStopClick(model: AppModel) = {
+    c.stopTrain()
+  }
+
   def onClearClick(model: AppModel) = {
-    model.graphicsContext2D.get.clearRect(0, 0, 500, 500);
+    model.graphicsContext2D.get.clearRect(0, 0, 500, 500)
   }
 
 
@@ -37,6 +41,7 @@ class AppController extends IController{
     var dataImage = Util.prepareFileImage(model.canvas.get.snapshot(null,null))
     var dataInput = new ClassificationData{data = dataImage.getSemnificativeScaledImageTransformated}
 
+    Classification.prepareData(Array(dataInput))
 
 
 
@@ -46,15 +51,15 @@ class AppController extends IController{
 
   def onTrainClick(model: AppModel) = {
 
-    val elem= Util.getImagesFrom(new File("F:\\MEGA\\LICENTA\\src\\main\\resources\\images").toPath,5 )
+    val elem= Util.getImagesFrom(new File("D:\\jetBrains\\licenta_v8.1.5\\src\\main\\resources\\images").toPath, 5 )
 
     classificationData = elem.map(el => new ClassificationData{name = el.getName; data = el.getSemnificativeScaledImageTransformated} )(collection.breakOut)
     Classification.prepareData(classificationData)
 
 
-    c.layerCount = Array(30)
+    c.layerCount = Array(50)
     c.alfa = 1E-6
-    c.learningRate = 0.8
+    c.learningRate = 0.25
     c.train(classificationData)
 
 

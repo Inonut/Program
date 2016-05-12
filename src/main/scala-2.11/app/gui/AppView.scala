@@ -39,6 +39,13 @@ class AppView extends Scene with IView{
     text = "Clear"
   }
 
+  private val stopButton = new Button{
+
+    onMouseClicked = (e: MouseEvent) => controller.onStopClick(model)
+
+    text = "Stop"
+  }
+
   private val canvas = new Canvas{
 
     model.graphicsContext2D set graphicsContext2D
@@ -72,7 +79,8 @@ class AppView extends Scene with IView{
       paneCanvas,
       trainButton,
       testButton,
-      clearButton
+      clearButton,
+      stopButton
     )
   }
 }
