@@ -166,9 +166,9 @@ class PresentationView extends Scene with IView{
           new Label("Strat Ascuns"),
           hiddenLayer,
           new Label("Rata de Invatare"),
-          learnRate,
+          learnRate/*,
           new Label("Alfa"),
-          alfa
+          alfa*/
         )
       },
       new HBox{

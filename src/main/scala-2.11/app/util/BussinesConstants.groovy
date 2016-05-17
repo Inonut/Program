@@ -22,8 +22,8 @@ public class BussinesConstants {
     public static final String TYPE_FACE = "F";
     public static final String TYPE_DIGIT = "D";
 
-    public static final double WIDTH = 30;
-    public static final double HEIGHT = 30;
+    public static final double WIDTH = 50;
+    public static final double HEIGHT = 50;
 
     public static final ButtonType BUTTON_YES = new ButtonType("Da", YES);
     public static final ButtonType BUTTON_NO = new ButtonType("Nu", NO); //ButtonBar.ButtonData.CANCEL_CLOSE

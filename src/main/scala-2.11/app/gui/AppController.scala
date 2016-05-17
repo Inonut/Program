@@ -51,7 +51,7 @@ class AppController extends IController{
 
   def onTrainClick(model: AppModel) = {
 
-    val elem= Util.getImagesFrom(new File("D:\\jetBrains\\licenta_v8.1.5\\src\\main\\resources\\images").toPath, 5 )
+    val elem= Util.getImagesFrom(new File("F:\\MEGA\\LICENTA\\src\\main\\resources\\images").toPath, 5 )
 
     classificationData = elem.map(el => new ClassificationData{name = el.getName; data = el.getSemnificativeScaledImageTransformated} )(collection.breakOut)
     Classification.prepareData(classificationData)

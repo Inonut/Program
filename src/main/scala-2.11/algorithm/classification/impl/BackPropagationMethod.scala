@@ -89,15 +89,83 @@ class BackPropagationMethod extends Classification{
 
   def updateError(): Unit = {
     //ultimul strat
-    layers.last.neurons.foreach(neuron => neuron.error = activationFunction.derivate(neuron.output) * (neuron.target - neuron.output))
+    layers.last.neurons.foreach(neuron => neuron.error = activationFunction.derivate(neuron.weightSum) * (neuron.target - neuron.output))
 
-    for(i <- layers.length-2 until 0 by -1){
+    for(i <- layers.length-2 to 0 by -1){
       val layer = layers(i) // prin referinta (vezi initul)
       val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronFrom))
       layer.neurons.foreach(neuron => neuron.error = 0)
       weights.foreach(weight => weight.neuronFrom.error += activationFunction.derivate(weight.neuronFrom.weightSum) * weight.neuronTo.error * weight.w)
     }
   }
+
+  def restart(): Unit ={
+    for(i <- 0 until layers.length - 1) {
+      val layer = layers(i)
+      val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronFrom))
+      weights.foreach(weight => {
+        weight.gradientNeuron = 0
+        weight.lastError = 0
+      })
+      layer.neurons.foreach(neuron =>{
+        neuron.gradientNeuron = 0
+        neuron.lastError = 0
+      })
+    }
+  }
+
+  def updateGradient(): Unit ={
+    for(i <- 0 until layers.length - 1){
+      val layer = layers(i) // prin referinta (vezi initul)
+      val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronFrom))
+
+      weights.foreach(weight =>  {
+        weight.gradientNeuron += weight.neuronTo.error * weight.neuronFrom.output
+        weight.neuronFrom.gradientNeuron += weight.neuronTo.error * weight.neuronFrom.output
+      })
+    }
+  }
+
+
+  def updateWeights3(): Unit ={
+    for(i <- 0 until layers.length - 1){
+      val layer = layers(i) // prin referinta (vezi initul)
+      val weights = layer.weights.filter(weight => layer.neurons.contains(weight.neuronFrom))
+
+      weights.foreach(weight => {
+
+        var change = weight.gradientNeuron *  weight.prevGradientNeuron
+        var delta = 0.0
+
+        if(change > 0){
+          delta = weight.updateValue * etaPlus
+          if(delta > deltaMax){
+            delta = deltaMax
+          }
+          weight.w += Math.signum(weight.gradientNeuron) * delta
+          weight.updateValue = delta
+          weight.prevGradientNeuron = weight.gradientNeuron
+
+        } else if(change < 0){
+          delta = weight.updateValue * etaMinus
+          if(delta < deltaMin){
+            delta = deltaMin
+          }
+          weight.updateValue = delta
+          weight.w -= weight.lastError
+          weight.prevGradientNeuron = 0
+
+        } else {
+          delta = weight.updateValue
+          weight.w += Math.signum(weight.gradientNeuron) * delta
+          weight.prevGradientNeuron = weight.gradientNeuron
+        }
+
+      })
+    }
+  }
+
+
 
 
   def updateWeights(): Unit = {

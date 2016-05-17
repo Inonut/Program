@@ -15,9 +15,7 @@ object Main {
       Array(0.0,0.0),
       Array(1.0,0.0),
       Array(0.0,1.0),
-      Array(1.0,1.0),
-      Array(2.0,1.0),
-      Array(1.0,2.0)
+      Array(1.0,1.0)
 
     )
 
@@ -25,18 +23,16 @@ object Main {
       Array(0.0, 0.0),
       Array(1.0, 1.0),
       Array(1.0, 1.0),
-      Array(0.0, 0.0),
-      Array(1.0, 0.0),
-      Array(1.0, 0.0)
+      Array(0.0, 0.0)
     )
 
     var network = new Network().create(Array(
       new Layer().create(new SignoidFunction, 2, 1),
       new Layer().create(new SignoidFunction, 3, 1),
-      new Layer().create(new SignoidFunction, 2, 0)))
+      new Layer().create(new SignoidFunction, 2, 1)))
     network.randomize()
 
-    var train = new PropagationTrainer().create(network, XOR_INPUT, XOR_IDEAL, 0)
+    var train = new PropagationTrainer().create(network, XOR_INPUT, XOR_IDEAL, 0.2)
 
     var iteration = 1
 

@@ -1,7 +1,7 @@
 package algorithm
 
 import algorithm.classification.Classification
-import algorithm.classification.impl.BackPropagationMethod
+import algorithm.classification.impl.{BackPropagationMethod, BackPropagationMethod2}
 import algorithm.domain.ClassificationData
 
 
@@ -26,7 +26,7 @@ object Main {
 
     c.recognize(new ClassificationData{name = "2"; data = Array(6,4)})*/
 
-    var c = new BackPropagationMethod
+    var c = new BackPropagationMethod2
 
    /* var input = Array(
       new ClassificationData{name = "1"; data = Array(0.075, 0.234); target = Array(0.702)},
@@ -42,10 +42,10 @@ object Main {
 */
 
     var input = Array(
-      new ClassificationData{name = "1"; data = Array(65, 154); },
-      new ClassificationData{name = "2"; data = Array(221, 148); },
-      new ClassificationData{name = "3"; data = Array(333, 141); },
-      new ClassificationData{name = "4"; data = Array(463, 145); })
+      new ClassificationData{name = "1"; data = Array(0.2, 0.674); target=Array(1,1,0)},
+      new ClassificationData{name = "2"; data = Array(0.472, 0.414); target=Array(1,1,0)},
+      new ClassificationData{name = "3"; data = Array(0.2, 0.404); target=Array(0,1,0) },
+      new ClassificationData{name = "4"; data = Array(0.468, 0.662); target=Array(0,1,0)})
 
   /*  val input = Array(
       new ClassificationData{name = "1"; data = Array(0, 1); target = Array(0)},
@@ -53,12 +53,12 @@ object Main {
       new ClassificationData{name = "1"; data = Array(1, 1); target = Array(1)},
       new ClassificationData{name = "1"; data = Array(0, 0); target = Array(1)})
 */
-    Classification.prepareData(input)
+   // Classification.prepareData(input)
 
 
-    c.layerCount = Array(30)
+    c.layerCount = Array(20)
     c.alfa = 1E-6
-    c.learningRate = 0.8
+    c.learningRate = 0.2
     c.error = 1E-3
     c.train(input)
 

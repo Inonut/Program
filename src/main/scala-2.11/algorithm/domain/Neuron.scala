@@ -12,10 +12,20 @@ class Neuron {
   var target: Double = -1
   var error: Double = 0
 
+
   var layer: Layer = null
 
   var gradientNeuron: Double = 0
   var prevGradientNeuron: Double = 0.0
   var gradientBias: Double = 0
   var prevGradientBias: Double = 0.0
+  var lastError: Double = 0
+  var updateValue: Double = 0
+
+
+  /*****/
+
+
+
+
 }
