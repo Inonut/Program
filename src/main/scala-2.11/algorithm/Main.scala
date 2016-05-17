@@ -1,7 +1,7 @@
 package algorithm
 
 import algorithm.classification.Classification
-import algorithm.classification.impl.{BackPropagationMethod, BackPropagationMethod2}
+import algorithm.classification.impl.{BackPropagationMethod, BackPropagationMethod2, PerceptronMethod}
 import algorithm.domain.ClassificationData
 
 
@@ -26,7 +26,7 @@ object Main {
 
     c.recognize(new ClassificationData{name = "2"; data = Array(6,4)})*/
 
-    var c = new BackPropagationMethod2
+    var c = new PerceptronMethod
 
    /* var input = Array(
       new ClassificationData{name = "1"; data = Array(0.075, 0.234); target = Array(0.702)},
@@ -42,10 +42,10 @@ object Main {
 */
 
     var input = Array(
-      new ClassificationData{name = "1"; data = Array(0.2, 0.674); target=Array(1,1,0)},
-      new ClassificationData{name = "2"; data = Array(0.472, 0.414); target=Array(1,1,0)},
-      new ClassificationData{name = "3"; data = Array(0.2, 0.404); target=Array(0,1,0) },
-      new ClassificationData{name = "4"; data = Array(0.468, 0.662); target=Array(0,1,0)})
+      new ClassificationData{name = "1"; data = Array(0.2, 0.2); target=Array(1,1,0)},
+      new ClassificationData{name = "1"; data = Array(0.2, 0.5); target=Array(1,1,0)},
+      new ClassificationData{name = "4"; data = Array(0.20, 0.20); target=Array(0,1,0) },
+      new ClassificationData{name = "4"; data = Array(0.20, 0.30); target=Array(0,1,0)})
 
   /*  val input = Array(
       new ClassificationData{name = "1"; data = Array(0, 1); target = Array(0)},
@@ -60,14 +60,15 @@ object Main {
     c.alfa = 1E-6
     c.learningRate = 0.2
     c.error = 1E-3
+    c.nrEpochs = 1000000
     c.train(input)
 
     input :+= new ClassificationData{data = Array(0.383, 0.400);}
     input :+= new ClassificationData{data = Array(0.463, 0.185);}
 
     input.foreach(data => {
-      c.recognize(data).target.foreach(t=>print(t+" "))
-      println()
+      //c.recognize(data).target.foreach(t=>print(t+" "))
+      println(c.recognize(data).name)
     })
 
 

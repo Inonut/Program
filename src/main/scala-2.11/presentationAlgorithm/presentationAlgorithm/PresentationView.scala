@@ -115,7 +115,7 @@ class PresentationView extends Scene with IView{
     value <==> model.selectedMethod
 
     //init:
-    items = new FXListProperty[Classification]{this.addAll(new BackPropagationMethod/*, new PerceptronMethod*/)}
+    items = new FXListProperty[Classification]{this.addAll(new BackPropagationMethod, new PerceptronMethod)}
     selectionModel.value.selectFirst()
   }
 

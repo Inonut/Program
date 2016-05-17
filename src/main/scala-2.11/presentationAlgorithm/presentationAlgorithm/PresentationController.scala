@@ -99,7 +99,11 @@ class PresentationController extends IController{
   }
 
   def detNameFromOutput(data: ClassificationData, classificationData: Array[ClassificationData]): String = {
-    classificationData.minBy(cdata => (cdata.target,data.target).zipped.map((a,b) => Math.abs(a-b)).sum).name
+    if(data.target == null){
+      data.name
+    } else {
+      classificationData.minBy(cdata => (cdata.target,data.target).zipped.map((a,b) => Math.abs(a-b)).sum).name
+    }
   }
 
   def stopTrain(method: Classification): Unit = method.stopTrain()
