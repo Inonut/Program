@@ -87,6 +87,10 @@ object Classification {
         Math.random(),
         Math.random(),
         Math.random(),
+        Math.random(),
+        Math.random(),
+        Math.random(),
+        Math.random(),
         Math.random()
       )
       names._2.foreach(d => d.target = target)

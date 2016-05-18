@@ -42,10 +42,12 @@ object Main {
 */
 
     var input = Array(
-      new ClassificationData{name = "1"; data = Array(0.2, 0.2); target=Array(1,1,0)},
-      new ClassificationData{name = "1"; data = Array(0.2, 0.5); target=Array(1,1,0)},
-      new ClassificationData{name = "4"; data = Array(0.20, 0.20); target=Array(0,1,0) },
-      new ClassificationData{name = "4"; data = Array(0.20, 0.30); target=Array(0,1,0)})
+      new ClassificationData{name = "0"; data = Array(-0.1, -0.1); target=Array(1,1,0)},
+      new ClassificationData{name = "0"; data = Array(-0.1, -0.2); target=Array(1,1,0)},
+      new ClassificationData{name = "1"; data = Array(0.1, 0.1); target=Array(1,1,0)},
+      new ClassificationData{name = "1"; data = Array(0.1, 0.2); target=Array(1,1,0)},
+      new ClassificationData{name = "4"; data = Array(0.5, 0.5); target=Array(0,1,0)},
+      new ClassificationData{name = "4"; data = Array(0.5, 0.6); target=Array(0,1,0)})
 
   /*  val input = Array(
       new ClassificationData{name = "1"; data = Array(0, 1); target = Array(0)},
@@ -63,7 +65,7 @@ object Main {
     c.nrEpochs = 1000000
     c.train(input)
 
-    input :+= new ClassificationData{data = Array(0.383, 0.400);}
+    input :+= new ClassificationData{data = Array(0.00383, 0.00400);}
     input :+= new ClassificationData{data = Array(0.463, 0.185);}
 
     input.foreach(data => {
