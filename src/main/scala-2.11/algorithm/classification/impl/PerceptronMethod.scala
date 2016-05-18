@@ -40,7 +40,7 @@ class PerceptronMethod extends Classification{
       cd.data.foreach(d => elem :+= d)
       data :+= elem
     })
-    classificationData.filter(cd => cd.name.equals(name)).foreach(cd => {
+    classificationData.filter(cd => !cd.name.equals(name)).foreach(cd => {
       var elem = Array(-1.0)
       cd.data.foreach(d => elem :+= -d)
       data :+= elem
