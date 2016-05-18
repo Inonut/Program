@@ -29,6 +29,7 @@ class PerceptronMethod extends Classification{
 
   override protected def clearNet(): Unit = {
     data = Map()
+    nbIter = 0
   }
 
   def makeData(name: String, classificationData: Array[ClassificationData]): Array[Array[Double]] = {
@@ -40,7 +41,7 @@ class PerceptronMethod extends Classification{
       cd.data.foreach(d => elem :+= d)
       data :+= elem
     })
-    classificationData.filter(cd => cd.name.equals(name)).foreach(cd => {
+    classificationData.filter(cd => !cd.name.equals(name)).foreach(cd => {
       var elem = Array(-1.0)
       cd.data.foreach(d => elem :+= -d)
       data :+= elem
@@ -49,18 +50,22 @@ class PerceptronMethod extends Classification{
     data
   }
 
+  var nbIter: Int = 0
+
   def getBestWeight(name: String, inputs: Array[Array[Double]]): Array[Double] = {
 
     var weight = Array[Double]()
-    inputs.head.foreach(d => weight :+= Random.nextDouble() * 2 - 1)
+    inputs.head.foreach(d => weight :+= Random.nextDouble() * 2.0 - 1.0)
 
     var ok = false
     for (i <-0 until this.nrEpochs if !ok) {
+      nbIter += 1
       ok = true
       inputs.foreach( input => {
         if((weight, input).zipped.map((w,i) => w*i).sum <= 0){
-          weight = (weight, input).zipped.map((w,i) => w+i)
           ok = false
+          //println(weight.mkString(","))
+          weight = (weight, input).zipped.map((w,i) => w+i)
         }
       })
     }
@@ -78,10 +83,13 @@ class PerceptronMethod extends Classification{
     names.zipWithIndex.foreach{
       case (name: String, i: Int) =>
 
+        println(name)
+
         var dataResult = makeData(name, classificationData)
         data += name -> getBestWeight(name, dataResult)
 
-        doAfterIteration( (i+1) * this.nrEpochs, 0.0)
+        doAfterIteration( nbIter, 0.0)
+        Thread.sleep(2000)
     }
   }
 

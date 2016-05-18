@@ -75,7 +75,7 @@ class PresentationController extends IController{
         //println(iter + " " + totalError)
         model.errorValue.set(totalError.toString)
         model.epochValue.set(iter.toString)
-        if(iter % 1000 == 0 ){
+        if(iter % 1000 == 0 || totalError == 0.0){
           model.points.map(node => new Circle(node.asInstanceOf[javafx.scene.shape.Circle]))(collection.breakOut)
               .filter(node => !sfxPoints.contains(node))
               .foreach(point => {
